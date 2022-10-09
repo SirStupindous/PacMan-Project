@@ -47,7 +47,7 @@ class Game:
 
 
             #play button creation 
-            PLAY_BUTTON = Button(image=None, pos=(350,300),text_input = "Play", font=pg.font.Font(f'images/PAC-FONT.TTF', 75), base_color="Red", hovering_color="White")
+            PLAY_BUTTON = Button(image=None, pos=(350,400),text_input = "Play", font=pg.font.Font(f'images/PAC-FONT.TTF', 75), base_color="Red", hovering_color="White")
 
             #when mouse is hovering over the play button update it 
             for button in [PLAY_BUTTON]:
