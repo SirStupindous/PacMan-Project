@@ -44,7 +44,7 @@ class NodeGroup:
                     self.nodesDict[(x, y)] = Node(x, y)
 
     def constructKey(self, x, y):
-        return x * 24, y * 2445
+        return x * 24, y * 24
 
     def connectHorizontally(self, data, xoffset=0, yoffset=0):
         for row in list(range(data.shape[0])):
