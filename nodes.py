@@ -7,6 +7,7 @@ class Node:
     def __init__(self, x, y):
         self.position = Vector(x, y)
         self.neighbors = {"UP": None, "DOWN": None, "LEFT": None, "RIGHT": None}
+        self.rect = pg.Rect((int(self.position.x)), int(self.position.y), 10, 10)
 
     def draw(self, screen):
         for n in self.neighbors.keys():
@@ -14,11 +15,10 @@ class Node:
                 start = self.position.x, self.position.y
                 end = self.neighbors[n].position.x, self.neighbors[n].position.y
                 pg.draw.line(screen, (255, 255, 255), start, end, 4)
-                pg.draw.circle(
+                pg.draw.rect(
                     screen,
                     (255, 0, 0),
-                    (int(self.position.x), int(self.position.y)),
-                    12,
+                    self.rect,
                 )
 
 
