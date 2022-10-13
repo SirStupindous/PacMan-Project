@@ -14,6 +14,7 @@ class Ghost:
         self.type = type
         self.x = self.rect.x
         self.y = self.rect.y
+        self.direction = Vector(0,0)
 
     def red(self): 
         if self.atNode():
@@ -51,11 +52,21 @@ class Ghost:
 
     def blue(self): pass
 
-    def move(self, dir):pass
+    def move(self, dir):
+        if dir == "UP":
+            self.direction = (0,1)
+        elif dir == "DOWN":
+            self.direction = (0,-1)
+        elif dir == "LEFT":
+            self.direction = (1,0)
+        elif dir =="RIGHT":
+            self.direction = (-1,0)
 
+        else: print("Error dir is not right")
+        
     def atNode(self):
         pass
 
-    def update(self):pass
+    def update(self): pass
     
     
