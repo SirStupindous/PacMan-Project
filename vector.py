@@ -1,66 +1,51 @@
-from io import UnsupportedOperation
-from math import sqrt
+import math
 
-
-class Vector:
-    """General purpose, 2d vector class for use in moving objects in games
-    it turns out linear algebra IS useful after all !
-
-    uses Python's version of operator overloading  v.__add__(u) can be written as v + u
-    """
-
+class Vector(object):
     def __init__(self, x=0, y=0):
-        self.x, self.y = x, y
+        self.x = x
+        self.y = y
+        self.thresh = 0.000001
 
-    def __repr__(self):
-        return f"Vector({self.x},{self.y})"
-
-    def __add__(self, other):  # v + u
+    def __add__(self, other):
         return Vector(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other):  # v - u
-        return self + -other
+    def __sub__(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
 
-    def __neg__(self):  # -v
+    def __neg__(self):
         return Vector(-self.x, -self.y)
 
-    def __mul__(self, k):  # v * k
-        return Vector(k * self.x, k * self.y)
+    def __mul__(self, scalar):
+        return Vector(self.x * scalar, self.y * scalar)
 
-    def __rmul__(self, k):  # k * v
-        return self.__mul__(k)
+    def __div__(self, scalar):
+        if scalar != 0:
+            return Vector(self.x / float(scalar), self.y / float(scalar))
+        return None
 
-    def __floordiv__(self, k):  # v // k
-        return Vector(self.x // k, self.y // k)
+    def __truediv__(self, scalar):
+        return self.__div__(scalar)
 
-    def __truediv__(self, k):  # v / k
-        return Vector(self.x / k, self.y / k)
+    def __eq__(self, other):
+        if abs(self.x - other.x) < self.thresh:
+            if abs(self.y - other.y) < self.thresh:
+                return True
+        return False
 
-    def dot(self, other):  # dot product, length of self when projected on other
-        return self.x * other.x + self.y + other.y
+    def magnitudeSquared(self):
+        return self.x**2 + self.y**2
 
-    def cross(self, other):
-        raise UnsupportedOperation  # not supported at this time: requires 3d Vectors !
+    def magnitude(self):
+        return math.sqrt(self.magnitudeSquared())
 
-    def norm(self):  # length of a vector
-        return sqrt(self.dot(self))
+    def copy(self):
+        return Vector(self.x, self.y)
 
-    def magnitude(self):  # another name for the norm
-        return self.norm()
+    def asTuple(self):
+        return self.x, self.y
 
-    def unit_vector(self):  # v of unit length in same direction as v
-        return self / self.magnitude()
+    def asInt(self):
+        return int(self.x), int(self.y)
 
-    def __iadd__(self, other):  # v += u
-        self.x += other.x
-        self.y += other.y
-        return self
-
-    def __isub__(self, other):  # v -= u
-        self += -other
-        return self
-
-    def __imul__(self, k):  # v *= k
-        self.x *= k
-        self.y += k
-        return self
+    def __str__(self):
+        return "<"+str(self.x)+", "+str(self.y)+">"
