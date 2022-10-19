@@ -87,6 +87,8 @@ class Game(object):
                     if PLAY_BUTTON.checkForInput(menu_mouse_pos):
                         g = Game()
                         g.start()
+                        # while True:
+                        #     g.update
 
             pg.display.update()
 
