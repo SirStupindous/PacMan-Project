@@ -9,7 +9,7 @@ class Sound:
 
     def play_startup(self):
         pg.mixer.music.load('sounds/startup.wav')
-        pg.mixer.music.play(-1,0.0)
+        pg.mixer.music.play(0,0.0)
 
     def stop_sound(self):
         pg.mixer.music.stop()
@@ -21,4 +21,5 @@ class Sound:
     def play_waka(self):
         pg.mixer.music.load('sounds/wakawaka.wav')
         pg.mixer.music.play(0,0.0)
+
 
