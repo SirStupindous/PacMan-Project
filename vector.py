@@ -1,5 +1,6 @@
 import math
 
+
 class Vector(object):
     def __init__(self, x=0, y=0):
         self.x = x
@@ -48,4 +49,4 @@ class Vector(object):
         return int(self.x), int(self.y)
 
     def __str__(self):
-        return "<"+str(self.x)+", "+str(self.y)+">"
+        return "<" + str(self.x) + ", " + str(self.y) + ">"
