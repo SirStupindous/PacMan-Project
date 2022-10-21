@@ -14,6 +14,7 @@ from sprites import LifeSprites
 from sprites import MazeSprites
 from button import Button
 from maze_functions import MazeData
+from sound import Sound
 
 
 class Game(object):
@@ -38,6 +39,7 @@ class Game(object):
         self.fruitCaptured = []
         self.fruitNode = None
         self.mazedata = MazeData()
+        self.sound = Sound()
         # self.menu()
 
     # A basic starter main menu page
@@ -88,6 +90,8 @@ class Game(object):
                     if PLAY_BUTTON.checkForInput(menu_mouse_pos):
                         g = Game()
                         g.start()
+                        # while True:
+                        #     g.update
 
             pg.display.update()
 
@@ -143,6 +147,7 @@ class Game(object):
         self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
+        self.sound.play_startup()
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
@@ -311,6 +316,8 @@ class Game(object):
         self.portal.reset()
         self.fruit = None
         self.textgroup.showText(READYTXT)
+        self.sound.play_startup()
+        
 
     def updateScore(self, points):
         self.score += points

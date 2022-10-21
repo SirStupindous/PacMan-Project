@@ -6,6 +6,7 @@ from game_functions import Entity
 from sprites import PacmanSprites
 from animation import Animator
 
+from sound import Sound
 
 class Pacman(Entity):
     def __init__(self, node):
@@ -16,6 +17,7 @@ class Pacman(Entity):
         self.setBetweenNodes(LEFT)
         self.alive = True
         self.sprites = PacmanSprites(self)
+        self.sound=Sound()
 
     def reset(self):
         Entity.reset(self)
@@ -28,6 +30,8 @@ class Pacman(Entity):
     def die(self):
         self.alive = False
         self.direction = STOP
+        self.sound.play_dead()
+        
 
     def update(self, dt):
         self.sprites.update(dt)
@@ -65,6 +69,7 @@ class Pacman(Entity):
     def eatPellets(self, pelletList):
         for pellet in pelletList:
             if self.collideCheck(pellet):
+                self.sound.play_waka()
                 return pellet
         return None
 
