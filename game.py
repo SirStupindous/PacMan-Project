@@ -240,7 +240,6 @@ class Game(object):
                     self.pause.setPause(pauseTime=1, func=self.showEntities)
                     ghost.startSpawn()
                     self.nodes.allowHomeAccess(ghost)
-                    self.portal.reset()
                 elif ghost.mode.current is not SPAWN:
                     if self.pacman.alive:
                         self.lives -= 1
@@ -317,7 +316,6 @@ class Game(object):
         self.fruit = None
         self.textgroup.showText(READYTXT)
         self.sound.play_startup()
-        
 
     def updateScore(self, points):
         self.score += points
