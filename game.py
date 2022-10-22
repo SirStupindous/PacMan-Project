@@ -1,3 +1,4 @@
+from ast import While
 import sys
 import pygame as pg
 from pygame.locals import *
@@ -40,6 +41,7 @@ class Game(object):
         self.fruitNode = None
         self.mazedata = MazeData()
         self.sound = Sound()
+        self.running = False
         # self.menu()
 
     # A basic starter main menu page
@@ -88,12 +90,18 @@ class Game(object):
                 # if mouse button is pressed check if the click was on the play button and if it was play game
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if PLAY_BUTTON.checkForInput(menu_mouse_pos):
+                        self.window = 1
                         g = Game()
                         g.start()
-                        # while True:
-                        #     g.update
+
 
             pg.display.update()
+
+    # def highscores(self):
+    #     pg.display.set_caption("Highscores")
+
+    #     while True:
+
 
     def setBackground(self):
         self.background_norm = pg.surface.Surface(SCREENSIZE).convert()
@@ -110,6 +118,8 @@ class Game(object):
         self.background = self.background_norm
 
     def start(self):
+        g.screen.fill((0,0,0))
+        self.running = True
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(
             "mazes/" + self.mazedata.obj.name + ".txt",
@@ -148,6 +158,7 @@ class Game(object):
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
         self.sound.play_startup()
+        
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
@@ -321,6 +332,19 @@ class Game(object):
         self.score += points
         self.textgroup.updateScore(self.score)
 
+        #function for updating high scores not working yet
+        # with open('highscores.txt','r',encoding='utf-8') as file:
+        #     content = file.readlines()
+
+        # for i in range(8):
+        #     if content[i] < self.score:
+        #         content[i] = self.score
+        #         with open('highscores.txt','w',encoding='utf-8') as file:
+        #             file.writelines(content)
+        #         break
+
+            
+
     def render(self):
         self.screen.blit(self.background, (0, 0))
         # self.nodes.render(self.screen)
@@ -348,5 +372,5 @@ class Game(object):
 if __name__ == "__main__":
     g = Game()
     g.start()
-    while True:
+    while g.running:
         g.update()
