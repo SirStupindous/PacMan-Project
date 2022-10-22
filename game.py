@@ -55,31 +55,47 @@ class Game(object):
             # Text to display on screen
             pac = "PACMAN!"
             color = (255, 255, 0)
-            text = pg.font.Font(f"fonts/PAC-FONT.ttf", 75).render(pac, True, color)
-            text_rec = text.get_rect(center=(100, 100))
+            text = pg.font.Font(f"fonts/PAC-FONT.ttf", 50).render(pac, True, color)
+            text_rec = text.get_rect(center=(225, 50))
             self.screen.blit(text, text_rec)
 
             # stand in for animated ghosts and pacman
             pac2 = "999912"
             color2 = (255, 255, 0)
-            text2 = pg.font.Font(f"fonts/PAC-FONT.ttf", 75).render(pac2, True, color2)
-            text2_rec = text2.get_rect(center=(100, 200))
+            text2 = pg.font.Font(f"fonts/PAC-FONT.ttf", 50).render(pac2, True, color2)
+            text2_rec = text2.get_rect(center=(225, 150))
             self.screen.blit(text2, text2_rec)
 
             # play button creation
             PLAY_BUTTON = Button(
                 image=None,
-                pos=(350, 400),
+                pos=(225, 300),
                 text_input="Play",
-                font=pg.font.Font(f"fonts/PAC-FONT.ttf", 75),
-                base_color="Red",
+                font=pg.font.Font(f"fonts/PAC-FONT.ttf", 50),
+                base_color="Blue",
                 hovering_color="White",
             )
+
+            HS_BUTTON = Button(
+                image=None,
+                pos=(225,400),
+                text_input = "High Scores",
+                font = pg.font.Font(f"fonts/PAC-FONT.ttf", 50),
+                base_color="Blue",
+                hovering_color="White",
+                )
+            
 
             # when mouse is hovering over the play button update it
             for button in [PLAY_BUTTON]:
                 button.changeColor(menu_mouse_pos)
                 button.update(screen=self.screen)
+
+            for button in [HS_BUTTON]:
+                button.changeColor(menu_mouse_pos)
+                button.update(screen=self.screen)    
+
+
 
             # check events
             for event in pg.event.get():
@@ -90,17 +106,37 @@ class Game(object):
                 # if mouse button is pressed check if the click was on the play button and if it was play game
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if PLAY_BUTTON.checkForInput(menu_mouse_pos):
-                        self.window = 1
+                        
                         g = Game()
                         g.start()
+
+                    if HS_BUTTON.checkForInput(menu_mouse_pos):
+                        g=Game()
+                        g.highscores
 
 
             pg.display.update()
 
-    # def highscores(self):
-    #     pg.display.set_caption("Highscores")
+    def highscores(self):
+        pg.display.set_caption("Highscores")
+        self.screen.fill((0,0,0))
 
-    #     while True:
+        while True:
+            hs = 'High Scores'
+            color = (255,255,255)
+            text = pg.font.Font(f"fonts/PAC-FONT.ttf", 75).render(hs, True, color)
+            text_rec = text.get_rect(center = (100,100))
+            self.screen.blit(text,text_rec)
+
+            file = open('highscores.txt')
+            content = file.readlines()
+            for i in range(9):
+                text2 = content[i]
+                color = (255,255,0)
+                text_rec2 = text2.get_rect(center = (i*50+100,100))
+                self.screen.blit(text2,text_rec2)
+
+
 
 
     def setBackground(self):
@@ -118,7 +154,7 @@ class Game(object):
         self.background = self.background_norm
 
     def start(self):
-        g.screen.fill((0,0,0))
+        self.screen.fill((0,0,0))
         self.running = True
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(
@@ -371,6 +407,6 @@ class Game(object):
 
 if __name__ == "__main__":
     g = Game()
-    g.start()
+    g.menu()
     while g.running:
         g.update()
