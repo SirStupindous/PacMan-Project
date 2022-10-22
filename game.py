@@ -407,6 +407,6 @@ class Game(object):
 
 if __name__ == "__main__":
     g = Game()
-    g.menu()
+    g.start()
     while g.running:
         g.update()
