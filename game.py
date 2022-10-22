@@ -112,7 +112,7 @@ class Game(object):
 
                     if HS_BUTTON.checkForInput(menu_mouse_pos):
                         g=Game()
-                        g.highscores
+                        g.highscores()
 
 
             pg.display.update()
@@ -128,13 +128,16 @@ class Game(object):
             text_rec = text.get_rect(center = (100,100))
             self.screen.blit(text,text_rec)
 
-            file = open('highscores.txt')
-            content = file.readlines()
-            for i in range(9):
-                text2 = content[i]
-                color = (255,255,0)
-                text_rec2 = text2.get_rect(center = (i*50+100,100))
-                self.screen.blit(text2,text_rec2)
+            # with open('highscores.txt') as file:
+            #     line = file.readline()
+            #     count=0
+            #     while line:
+            #         color = (255,255,0)
+            #         text2 = pg.font.Font(f"fonts/PAC-FONT.ttf",50).render(str(line),True,color)
+            #         text_rec2 = text2.get_rect(center = (count*50+100,100))
+            #         self.screen.blit(text2,text_rec2)
+            #         line=file.readline
+            #         count +=1
 
 
 
@@ -284,6 +287,9 @@ class Game(object):
                         time=1,
                     )
                     self.ghosts.updatePoints()
+
+                        
+
                     self.pause.setPause(pauseTime=1, func=self.showEntities)
                     ghost.startSpawn()
                     self.nodes.allowHomeAccess(ghost)
@@ -368,18 +374,32 @@ class Game(object):
         self.score += points
         self.textgroup.updateScore(self.score)
 
-        #function for updating high scores not working yet
-        # with open('highscores.txt','r',encoding='utf-8') as file:
-        #     content = file.readlines()
+
+    def update_highscore(self):
+         #function for updating high scores kinda works but it crashes the game a lot
+        with open('highscores.txt') as file:
+            line = file.readline()
+            count=0
+            data = file.readlines()
+
+        while line:
+            if int(line) <self.score:
+                data[count] = str(self.score)
+                with open('highscores.txt','w') as file:
+                    file.writelines(data)
+                pass
+            else:
+                with open('highscores.txt','r') as file:
+                    line=file.readline()
+                count +=1
 
         # for i in range(8):
-        #     if content[i] < self.score:
+        #     cint = int(content[i])
+        #     if cint < self.score:
         #         content[i] = self.score
         #         with open('highscores.txt','w',encoding='utf-8') as file:
-        #             file.writelines(content)
+        #             file.writelines(str(content))
         #         break
-
-            
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
@@ -408,5 +428,5 @@ class Game(object):
 if __name__ == "__main__":
     g = Game()
     g.start()
-    while g.running:
+    while True:
         g.update()
