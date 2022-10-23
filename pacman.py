@@ -1,3 +1,4 @@
+from discord import Game
 import pygame as pg
 from pygame.locals import *
 from vector import Vector
@@ -8,8 +9,9 @@ from animation import Animator
 
 from sound import Sound
 
+
 class Pacman(Entity):
-    def __init__(self, node):
+    def __init__(self, node, game):
         Entity.__init__(self, node)
         self.name = PACMAN
         self.color = YELLOW
@@ -17,7 +19,8 @@ class Pacman(Entity):
         self.setBetweenNodes(LEFT)
         self.alive = True
         self.sprites = PacmanSprites(self)
-        self.sound=Sound()
+        self.sound = Sound()
+        self.game = game
 
     def reset(self):
         Entity.reset(self)
@@ -31,7 +34,6 @@ class Pacman(Entity):
         self.alive = False
         self.direction = STOP
         self.sound.play_dead()
-        
 
     def update(self, dt):
         self.sprites.update(dt)
@@ -69,7 +71,8 @@ class Pacman(Entity):
     def eatPellets(self, pelletList):
         for pellet in pelletList:
             if self.collideCheck(pellet):
-                self.sound.play_waka()
+                if not self.game.freight:
+                    self.sound.play_waka()
                 return pellet
         return None
 

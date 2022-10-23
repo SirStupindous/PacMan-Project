@@ -45,22 +45,32 @@ class Game(object):
         self.sound = Sound()
         self.running = False
         # self.menu()
+        self.freight = False
 
-        self.pacman_images_right=[pg.transform.rotozoom(pg.image.load(f'images/menu_animation/Pacman_{n}.png'),0,0.7)for n in range(2)]
-        self.pacman_images_left=[pg.transform.rotozoom(pg.image.load(f'images/menu_animation/Pacman_{n}.png'),0,0.7)for n in range(2,4)]
+        self.pacman_images_right = [
+            pg.transform.rotozoom(
+                pg.image.load(f"images/menu_animation/Pacman_{n}.png"), 0, 0.7
+            )
+            for n in range(2)
+        ]
+        self.pacman_images_left = [
+            pg.transform.rotozoom(
+                pg.image.load(f"images/menu_animation/Pacman_{n}.png"), 0, 0.7
+            )
+            for n in range(2, 4)
+        ]
 
-        self.inkey_image=pg.image.load('images/menu_animation/ghost_1.png')
-        self.blinky_image=pg.image.load('images/menu_animation/ghost_2.png')
-        self.pinky_image=pg.image.load('images/menu_animation/ghost_3.png')
-        self.clyde_image=pg.image.load('images/menu_animation/ghost_4.png')
-        self.dead_ghost_image=pg.image.load('images/menu_animation/ghost_5.png')
+        self.inkey_image = pg.image.load("images/menu_animation/ghost_1.png")
+        self.blinky_image = pg.image.load("images/menu_animation/ghost_2.png")
+        self.pinky_image = pg.image.load("images/menu_animation/ghost_3.png")
+        self.clyde_image = pg.image.load("images/menu_animation/ghost_4.png")
+        self.dead_ghost_image = pg.image.load("images/menu_animation/ghost_5.png")
 
-        self.inkey_rect=self.inkey_image.get_rect()
-        self.timer_Pacman_right=Timer(image_list=self.pacman_images_right,is_loop=True)
-        self.timer_Pacman_left=Timer(image_list=self.pacman_images_left,is_loop=True)
-
-
-
+        self.inkey_rect = self.inkey_image.get_rect()
+        self.timer_Pacman_right = Timer(
+            image_list=self.pacman_images_right, is_loop=True
+        )
+        self.timer_Pacman_left = Timer(image_list=self.pacman_images_left, is_loop=True)
 
     # A basic starter main menu page
     def menu(self):
@@ -97,12 +107,12 @@ class Game(object):
 
             HS_BUTTON = Button(
                 image=None,
-                pos=(225,525),
-                text_input = "High Scores",
-                font = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 40),
+                pos=(225, 525),
+                text_input="High Scores",
+                font=pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 40),
                 base_color="Blue",
                 hovering_color="White",
-                )
+            )
 
             # when mouse is hovering over the play button update it
             for button in [PLAY_BUTTON]:
@@ -111,9 +121,7 @@ class Game(object):
 
             for button in [HS_BUTTON]:
                 button.changeColor(menu_mouse_pos)
-                button.update(screen=self.screen)    
-
-
+                button.update(screen=self.screen)
 
             # check events
             for event in pg.event.get():
@@ -124,16 +132,14 @@ class Game(object):
                 # if mouse button is pressed check if the click was on the play button and if it was play game
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if PLAY_BUTTON.checkForInput(menu_mouse_pos):
-                        menu_running=False
+                        menu_running = False
                         g = Game()
                         g.start()
-                        
 
                     if HS_BUTTON.checkForInput(menu_mouse_pos):
-                        menu_running=False
-                        g=Game()
+                        menu_running = False
+                        g = Game()
                         g.highscores()
-
 
             pg.display.update()
 
@@ -145,25 +151,27 @@ class Game(object):
         while hs_running:
             menu_mouse_pos = pg.mouse.get_pos()
 
-            hs = 'High Scores'
-            color = (255,255,255)
-            text = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 30).render(hs, True, color)
-            text_rec = text.get_rect(center = (225,75))
-            self.screen.blit(text,text_rec)
+            hs = "High Scores"
+            color = (255, 255, 255)
+            text = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 30).render(
+                hs, True, color
+            )
+            text_rec = text.get_rect(center=(225, 75))
+            self.screen.blit(text, text_rec)
 
-            color1="White"
+            color1 = "White"
             count = 0
-            file = open('highscores.txt')
+            file = open("highscores.txt")
             line = file.readline
 
             for line in file:
-                text1 = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 30).render(line,True,color1)
-                text1_rec = text1.get_rect(center = (225,150+50*count))
-                self.screen.blit(text1,text1_rec)
-                count+=1
+                text1 = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 30).render(
+                    line, True, color1
+                )
+                text1_rec = text1.get_rect(center=(225, 150 + 50 * count))
+                self.screen.blit(text1, text1_rec)
+                count += 1
             file.close()
-            
-                
 
             BACK_BUTTON = Button(
                 image=None,
@@ -183,17 +191,13 @@ class Game(object):
                     pg.quit()
                     sys.exit()
 
-
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if BACK_BUTTON.checkForInput(menu_mouse_pos):
-                            hs_running=False
-                            g=Game()
-                            g.menu()
+                        hs_running = False
+                        g = Game()
+                        g.menu()
 
             pg.display.update()
-
-
-
 
     def setBackground(self):
         self.background_norm = pg.surface.Surface(SCREENSIZE).convert()
@@ -210,7 +214,7 @@ class Game(object):
         self.background = self.background_norm
 
     def start(self):
-        self.screen.fill('White')
+        self.screen.fill("White")
         self.running = True
 
         self.mazedata.loadMaze(self.level)
@@ -223,7 +227,7 @@ class Game(object):
         self.mazedata.obj.setPortalPairs(self.nodes)
         self.mazedata.obj.connectHomeNodes(self.nodes)
         self.pacman = Pacman(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart)
+            self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart), self
         )
         self.pellets = PelletGroup("mazes/" + self.mazedata.obj.name + ".txt")
         self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
@@ -253,9 +257,6 @@ class Game(object):
         self.sound.play_startup()
         while self.running:
             self.update()
-            
-        
-        
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
@@ -333,6 +334,7 @@ class Game(object):
         for ghost in self.ghosts:
             if self.pacman.collideGhost(ghost):
                 if ghost.mode.current is FREIGHT:
+                    self.freight = True
                     self.pacman.visible = False
                     ghost.visible = False
                     self.updateScore(ghost.points)
@@ -345,8 +347,6 @@ class Game(object):
                         time=1,
                     )
                     self.ghosts.updatePoints()
-
-                        
 
                     self.pause.setPause(pauseTime=1, func=self.showEntities)
                     ghost.startSpawn()
@@ -367,12 +367,13 @@ class Game(object):
             ghost.disablePortal = False
 
     def checkFruitEvents(self):
-        if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
+        if self.pellets.numEaten == 1 or self.pellets.numEaten == 140:
             if self.fruit is None:
                 self.fruit = Fruit(self.nodes.getNodeFromTiles(9, 20), self.level)
                 print(self.fruit)
         if self.fruit is not None:
             if self.pacman.collideCheck(self.fruit):
+                self.sound.play_fruit()
                 self.updateScore(self.fruit.points)
                 self.textgroup.addText(
                     str(self.fruit.points),
@@ -435,24 +436,23 @@ class Game(object):
         self.score += points
         self.textgroup.updateScore(self.score)
 
-
     def update_highscore(self):
-         #function for updating high scores kinda works but it crashes the game a lot
-        with open('highscores.txt') as file:
+        # function for updating high scores kinda works but it crashes the game a lot
+        with open("highscores.txt") as file:
             line = file.readline()
-            count=0
+            count = 0
             data = file.readlines()
 
         while line:
-            if int(line) <self.score:
+            if int(line) < self.score:
                 data[count] = str(self.score)
-                with open('highscores.txt','w') as file:
+                with open("highscores.txt", "w") as file:
                     file.writelines(data)
                 pass
             else:
-                with open('highscores.txt','r') as file:
-                    line=file.readline()
-                count +=1
+                with open("highscores.txt", "r") as file:
+                    line = file.readline()
+                count += 1
 
         # for i in range(8):
         #     cint = int(content[i])
@@ -485,11 +485,11 @@ class Game(object):
 
         pg.display.update()
 
+
 def main():
     g = Game()
     g.menu()
 
+
 if __name__ == "__main__":
     main()
-    
-    

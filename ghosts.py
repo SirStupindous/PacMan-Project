@@ -5,6 +5,7 @@ from settings import *
 from game_functions import Entity
 from modes import ModeController
 from sprites import GhostSprites
+from sound import Sound
 
 
 class Ghost(Entity):
@@ -15,7 +16,8 @@ class Ghost(Entity):
         self.goal = Vector()
         self.directionMethod = self.goalDirection
         self.pacman = pacman
-        self.mode = ModeController(self)
+        self.game = self.pacman.game
+        self.mode = ModeController(self, self.game)
         self.blinky = blinky
         self.homeNode = node
         self.disablePortal = True
@@ -56,13 +58,16 @@ class Ghost(Entity):
     def startFreight(self):
         self.mode.setFreightMode()
         if self.mode.current == FREIGHT:
+            self.game.freight = True
             self.setSpeed(50)
             self.directionMethod = self.randomDirection
+            self.game.sound.play_power_up()
 
     def normalMode(self):
         self.setSpeed(100)
         self.directionMethod = self.goalDirection
         self.homeNode.denyAccess(DOWN, self)
+        self.game.freight = False
 
 
 class Blinky(Ghost):
@@ -138,6 +143,7 @@ class GhostGroup(object):
         self.inky = Inky(node, pacman, self.blinky)
         self.clyde = Clyde(node, pacman)
         self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
+        self.sound = Sound()
 
     def __iter__(self):
         return iter(self.ghosts)
