@@ -57,11 +57,14 @@ class Portal(Entity):
                 (self.portal1_pos.position.x / 16, self.portal1_pos.position.y / 16),
                 (self.portal2_pos.position.x / 16, self.portal2_pos.position.y / 16),
             )
+            self.portal_set = True
 
     def reset(self):
         self.portal1 = False
         self.portal2 = False
-        self.nodes.deletePortalPair(
-            (self.portal1_pos.position.x / 16, self.portal1_pos.position.y / 16),
-            (self.portal2_pos.position.x / 16, self.portal2_pos.position.y / 16),
-        )
+        if self.portal_set:
+            self.nodes.deletePortalPair(
+                (self.portal1_pos.position.x / 16, self.portal1_pos.position.y / 16),
+                (self.portal2_pos.position.x / 16, self.portal2_pos.position.y / 16),
+            )
+            self.portal_set = False
