@@ -35,7 +35,7 @@ class Sound:
 
     def play_ghost_chase(self):
         pg.mixer.music.load('sounds/ghost_chase.wav')
-        pg.mixer.music.play(0,0.0)
+        pg.mixer.music.play(1,0.0)
 
     def play_ghost_eaten(self):
         pg.mixer.music.load('sounds/ghost_eaten.wav')
