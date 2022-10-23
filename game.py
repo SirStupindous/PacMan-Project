@@ -251,6 +251,8 @@ class Game(object):
                             self.pause.setPause(pauseTime=3, func=self.restart)
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
+        if self.level == 1:
+            ghost.disablePortal = False
 
     def checkFruitEvents(self):
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
