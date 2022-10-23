@@ -1,5 +1,6 @@
 from ast import While
 import sys
+import string
 import pygame as pg
 from pygame.locals import *
 from portal import Portal
@@ -10,6 +11,7 @@ from pellets import PelletGroup
 from ghosts import GhostGroup
 from fruit import Fruit
 from timer import Pause
+from timer import Timer
 from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
@@ -44,11 +46,28 @@ class Game(object):
         self.running = False
         # self.menu()
 
+        self.pacman_images_right=[pg.transform.rotozoom(pg.image.load(f'images/menu_animation/Pacman_{n}.png'),0,0.7)for n in range(2)]
+        self.pacman_images_left=[pg.transform.rotozoom(pg.image.load(f'images/menu_animation/Pacman_{n}.png'),0,0.7)for n in range(2,4)]
+
+        self.inkey_image=pg.image.load('images/menu_animation/ghost_1.png')
+        self.blinky_image=pg.image.load('images/menu_animation/ghost_2.png')
+        self.pinky_image=pg.image.load('images/menu_animation/ghost_3.png')
+        self.clyde_image=pg.image.load('images/menu_animation/ghost_4.png')
+        self.dead_ghost_image=pg.image.load('images/menu_animation/ghost_5.png')
+
+        self.inkey_rect=self.inkey_image.get_rect()
+        self.timer_Pacman_right=Timer(image_list=self.pacman_images_right,is_loop=True)
+        self.timer_Pacman_left=Timer(image_list=self.pacman_images_left,is_loop=True)
+
+
+
+
     # A basic starter main menu page
     def menu(self):
         pg.display.set_caption("Menu")
 
-        while True:
+        menu_running = True
+        while menu_running:
             # get mouse position
             menu_mouse_pos = pg.mouse.get_pos()
 
@@ -69,22 +88,21 @@ class Game(object):
             # play button creation
             PLAY_BUTTON = Button(
                 image=None,
-                pos=(225, 300),
+                pos=(225, 450),
                 text_input="Play",
-                font=pg.font.Font(f"fonts/PAC-FONT.ttf", 50),
+                font=pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 50),
                 base_color="Blue",
                 hovering_color="White",
             )
 
             HS_BUTTON = Button(
                 image=None,
-                pos=(225,400),
+                pos=(225,525),
                 text_input = "High Scores",
-                font = pg.font.Font(f"fonts/PAC-FONT.ttf", 50),
+                font = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 40),
                 base_color="Blue",
                 hovering_color="White",
                 )
-            
 
             # when mouse is hovering over the play button update it
             for button in [PLAY_BUTTON]:
@@ -106,11 +124,13 @@ class Game(object):
                 # if mouse button is pressed check if the click was on the play button and if it was play game
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if PLAY_BUTTON.checkForInput(menu_mouse_pos):
-                        
+                        menu_running=False
                         g = Game()
                         g.start()
+                        
 
                     if HS_BUTTON.checkForInput(menu_mouse_pos):
+                        menu_running=False
                         g=Game()
                         g.highscores()
 
@@ -119,25 +139,58 @@ class Game(object):
 
     def highscores(self):
         pg.display.set_caption("Highscores")
-        self.screen.fill((0,0,0))
+        self.screen.fill("black")
+        hs_running = True
 
-        while True:
+        while hs_running:
+            menu_mouse_pos = pg.mouse.get_pos()
+
             hs = 'High Scores'
             color = (255,255,255)
-            text = pg.font.Font(f"fonts/PAC-FONT.ttf", 75).render(hs, True, color)
-            text_rec = text.get_rect(center = (100,100))
+            text = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 30).render(hs, True, color)
+            text_rec = text.get_rect(center = (225,75))
             self.screen.blit(text,text_rec)
 
-            # with open('highscores.txt') as file:
-            #     line = file.readline()
-            #     count=0
-            #     while line:
-            #         color = (255,255,0)
-            #         text2 = pg.font.Font(f"fonts/PAC-FONT.ttf",50).render(str(line),True,color)
-            #         text_rec2 = text2.get_rect(center = (count*50+100,100))
-            #         self.screen.blit(text2,text_rec2)
-            #         line=file.readline
-            #         count +=1
+            color1="White"
+            count = 0
+            file = open('highscores.txt')
+            line = file.readline
+
+            for line in file:
+                text1 = pg.font.Font(f"fonts/PressStart2P-Regular.ttf", 30).render(line,True,color1)
+                text1_rec = text1.get_rect(center = (225,150+50*count))
+                self.screen.blit(text1,text1_rec)
+                count+=1
+            file.close()
+            
+                
+
+            BACK_BUTTON = Button(
+                image=None,
+                pos=(50, 25),
+                text_input="Back",
+                font=pg.font.Font(f"fonts/PAC-FONT.ttf", 25),
+                base_color="Red",
+                hovering_color="White",
+            )
+
+            for button in [BACK_BUTTON]:
+                button.changeColor(menu_mouse_pos)
+                button.update(screen=self.screen)
+
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+
+
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if BACK_BUTTON.checkForInput(menu_mouse_pos):
+                            hs_running=False
+                            g=Game()
+                            g.menu()
+
+            pg.display.update()
 
 
 
@@ -157,8 +210,9 @@ class Game(object):
         self.background = self.background_norm
 
     def start(self):
-        self.screen.fill((0,0,0))
+        self.screen.fill('White')
         self.running = True
+
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(
             "mazes/" + self.mazedata.obj.name + ".txt",
@@ -197,6 +251,10 @@ class Game(object):
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
         self.sound.play_startup()
+        while self.running:
+            self.update()
+            
+        
         
 
     def update(self):
@@ -301,6 +359,7 @@ class Game(object):
                         self.ghosts.hide()
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
+                            self.update_highscore()
                             self.pause.setPause(pauseTime=3, func=self.restart)
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
@@ -424,9 +483,11 @@ class Game(object):
 
         pg.display.update()
 
+def main():
+    g = Game()
+    g.menu()
 
 if __name__ == "__main__":
-    g = Game()
-    g.start()
-    while True:
-        g.update()
+    main()
+    
+    
