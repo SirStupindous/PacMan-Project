@@ -1,4 +1,3 @@
-from discord import Game
 import pygame as pg
 from pygame.locals import *
 from vector import Vector

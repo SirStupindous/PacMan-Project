@@ -44,7 +44,7 @@ class Game(object):
         self.mazedata = MazeData()
         self.sound = Sound()
         self.running = False
-        # self.menu()
+        self.menu_running = True
         self.freight = False
 
         self.pacman_images_right = [
@@ -76,8 +76,7 @@ class Game(object):
     def menu(self):
         pg.display.set_caption("Menu")
 
-        menu_running = True
-        while menu_running:
+        while self.menu_running:
             # get mouse position
             menu_mouse_pos = pg.mouse.get_pos()
 
@@ -305,7 +304,6 @@ class Game(object):
                             self.showEntities()
                         else:
                             self.textgroup.showText(PAUSETXT)
-                            # self.hideEntities()
                 elif event.key == K_LSHIFT or event.key == K_RSHIFT:
                     if not self.pause.paused:
                         self.portal.createPortal1()
@@ -413,8 +411,9 @@ class Game(object):
         self.lives = 5
         self.level = 0
         self.pause.paused = True
+        self.menu_running = True
         self.fruit = None
-        self.start()
+        self.menu()
         self.score = 0
         self.textgroup.updateScore(self.score)
         self.textgroup.updateLevel(self.level)
@@ -454,13 +453,6 @@ class Game(object):
                     line = file.readline()
                 count += 1
 
-        # for i in range(8):
-        #     cint = int(content[i])
-        #     if cint < self.score:
-        #         content[i] = self.score
-        #         with open('highscores.txt','w',encoding='utf-8') as file:
-        #             file.writelines(str(content))
-        #         break
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
