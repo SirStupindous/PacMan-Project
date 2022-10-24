@@ -1,5 +1,6 @@
 from settings import *
 
+
 class MainMode(object):
     def __init__(self):
         self.timer = 0
@@ -25,12 +26,13 @@ class MainMode(object):
 
 
 class ModeController(object):
-    def __init__(self, entity):
+    def __init__(self, entity, game):
         self.timer = 0
         self.time = None
         self.mainmode = MainMode()
         self.current = self.mainmode.mode
-        self.entity = entity 
+        self.entity = entity
+        self.game = game
 
     def update(self, dt):
         self.mainmode.update(dt)
