@@ -32,7 +32,7 @@ class Game(object):
         self.fruit = None
         self.pause = Pause(True)
         self.level = 0
-        self.lives = 1
+        self.lives = 5
         self.score = 0
         self.textgroup = TextGroup()
         self.lifesprites = LifeSprites(self.lives)
@@ -51,17 +51,17 @@ class Game(object):
         self.menu_timer = Timer(image_list=self.menu_images)
 
 
-        self.inkey_image = pg.image.load("images/menu_animation/ghost_1.png")
-        self.blinky_image = pg.image.load("images/menu_animation/ghost_2.png")
-        self.pinky_image = pg.image.load("images/menu_animation/ghost_3.png")
-        self.clyde_image = pg.image.load("images/menu_animation/ghost_4.png")
-        self.dead_ghost_image = pg.image.load("images/menu_animation/ghost_5.png")
+        # self.inkey_image = pg.image.load("images/menu_animation/ghost_1.png")
+        # self.blinky_image = pg.image.load("images/menu_animation/ghost_2.png")
+        # self.pinky_image = pg.image.load("images/menu_animation/ghost_3.png")
+        # self.clyde_image = pg.image.load("images/menu_animation/ghost_4.png")
+        # self.dead_ghost_image = pg.image.load("images/menu_animation/ghost_5.png")
 
-        self.inkey_rect = self.inkey_image.get_rect()
-        self.timer_Pacman_right = Timer(
-            image_list=self.pacman_images_right, is_loop=True
-        )
-        self.timer_Pacman_left = Timer(image_list=self.pacman_images_left, is_loop=True)
+        # self.inkey_rect = self.inkey_image.get_rect()
+        # self.timer_Pacman_right = Timer(
+        #     image_list=self.pacman_images_right, is_loop=True
+        # )
+        # self.timer_Pacman_left = Timer(image_list=self.pacman_images_left, is_loop=True)
 
     # A basic starter main menu page
     def menu(self):
