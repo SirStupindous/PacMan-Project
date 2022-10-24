@@ -32,7 +32,7 @@ class Game(object):
         self.fruit = None
         self.pause = Pause(True)
         self.level = 0
-        self.lives = 1
+        self.lives = 5
         self.score = 0
         self.textgroup = TextGroup()
         self.lifesprites = LifeSprites(self.lives)
@@ -361,8 +361,8 @@ class Game(object):
                         self.ghosts.hide()
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
-                            #self.update_highscore()
                             self.pause.setPause(pauseTime=3, func=self.restart)
+                            self.update_highscore()
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
         if self.level == 1:
@@ -440,21 +440,19 @@ class Game(object):
         self.textgroup.updateScore(self.score)
 
     def update_highscore(self):
-        with open("highscores.txt") as file:
-            line = file.readline()
-            count = 0
-            data = file.readlines()
+        with open("highscores.txt","r") as file:
+            lines = file.readlines()
+        print(lines)
 
-        while line:
+        for i in range(9):
+            line = lines[i].strip()
+
             if int(line) < self.score:
-                data[count] = str(self.score)
-                with open("highscores.txt", "w") as file:
-                    file.writelines(data)
+                lines[i] = str(self.score) + "\n"
+                with open("highscores.txt","w") as file:
+                    for line in lines:
+                        file.write(line)
                 break
-            else:
-                with open("highscores.txt", "r") as file:
-                    line = file.readline()
-            count += 1
 
 
     def render(self):
