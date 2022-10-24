@@ -44,40 +44,31 @@ class Game(object):
         self.mazedata = MazeData()
         self.sound = Sound()
         self.running = False
-        # self.menu()
+        self.menu_running = True
         self.freight = False
 
-        self.pacman_images_right = [
-            pg.transform.rotozoom(
-                pg.image.load(f"images/menu_animation/Pacman_{n}.png"), 0, 0.7
-            )
-            for n in range(2)
-        ]
-        self.pacman_images_left = [
-            pg.transform.rotozoom(
-                pg.image.load(f"images/menu_animation/Pacman_{n}.png"), 0, 0.7
-            )
-            for n in range(2, 4)
-        ]
+        self.menu_images = [pg.transform.rotozoom(pg.image.load(f'images/menu_animation/menu_animation{n}.png'),0,2)for n in range(93)]
+        self.menu_timer = Timer(image_list=self.menu_images)
 
-        self.inkey_image = pg.image.load("images/menu_animation/ghost_1.png")
-        self.blinky_image = pg.image.load("images/menu_animation/ghost_2.png")
-        self.pinky_image = pg.image.load("images/menu_animation/ghost_3.png")
-        self.clyde_image = pg.image.load("images/menu_animation/ghost_4.png")
-        self.dead_ghost_image = pg.image.load("images/menu_animation/ghost_5.png")
 
-        self.inkey_rect = self.inkey_image.get_rect()
-        self.timer_Pacman_right = Timer(
-            image_list=self.pacman_images_right, is_loop=True
-        )
-        self.timer_Pacman_left = Timer(image_list=self.pacman_images_left, is_loop=True)
+        # self.inkey_image = pg.image.load("images/menu_animation/ghost_1.png")
+        # self.blinky_image = pg.image.load("images/menu_animation/ghost_2.png")
+        # self.pinky_image = pg.image.load("images/menu_animation/ghost_3.png")
+        # self.clyde_image = pg.image.load("images/menu_animation/ghost_4.png")
+        # self.dead_ghost_image = pg.image.load("images/menu_animation/ghost_5.png")
+
+        # self.inkey_rect = self.inkey_image.get_rect()
+        # self.timer_Pacman_right = Timer(
+        #     image_list=self.pacman_images_right, is_loop=True
+        # )
+        # self.timer_Pacman_left = Timer(image_list=self.pacman_images_left, is_loop=True)
 
     # A basic starter main menu page
     def menu(self):
         pg.display.set_caption("Menu")
+        self.screen.fill("black")
 
-        menu_running = True
-        while menu_running:
+        while self.menu_running:
             # get mouse position
             menu_mouse_pos = pg.mouse.get_pos()
 
@@ -94,6 +85,11 @@ class Game(object):
             text2 = pg.font.Font(f"fonts/PAC-FONT.ttf", 50).render(pac2, True, color2)
             text2_rec = text2.get_rect(center=(225, 150))
             self.screen.blit(text2, text2_rec)
+
+            #animation
+            self.draw_animation()
+
+
 
             # play button creation
             PLAY_BUTTON = Button(
@@ -142,6 +138,13 @@ class Game(object):
                         g.highscores()
 
             pg.display.update()
+
+    def draw_animation(self):
+        image = self.menu_timer.image()
+        rect = image.get_rect()
+        rect.left = 0
+        rect.top = 275
+        self.screen.blit(image,rect)
 
     def highscores(self):
         pg.display.set_caption("Highscores")
@@ -305,7 +308,6 @@ class Game(object):
                             self.showEntities()
                         else:
                             self.textgroup.showText(PAUSETXT)
-                            # self.hideEntities()
                 elif event.key == K_LSHIFT or event.key == K_RSHIFT:
                     if not self.pause.paused:
                         self.portal.createPortal1()
@@ -359,8 +361,8 @@ class Game(object):
                         self.ghosts.hide()
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
-                            self.update_highscore()
                             self.pause.setPause(pauseTime=3, func=self.restart)
+                            self.update_highscore()
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
         if self.level == 1:
@@ -413,8 +415,9 @@ class Game(object):
         self.lives = 5
         self.level = 0
         self.pause.paused = True
+        self.menu_running = True
         self.fruit = None
-        self.start()
+        self.menu()
         self.score = 0
         self.textgroup.updateScore(self.score)
         self.textgroup.updateLevel(self.level)
@@ -437,30 +440,20 @@ class Game(object):
         self.textgroup.updateScore(self.score)
 
     def update_highscore(self):
-        # function for updating high scores kinda works but it crashes the game a lot
-        with open("highscores.txt") as file:
-            line = file.readline()
-            count = 0
-            data = file.readlines()
+        with open("highscores.txt","r") as file:
+            lines = file.readlines()
+        print(lines)
 
-        while line:
+        for i in range(9):
+            line = lines[i].strip()
+
             if int(line) < self.score:
-                data[count] = str(self.score)
-                with open("highscores.txt", "w") as file:
-                    file.writelines(data)
-                pass
-            else:
-                with open("highscores.txt", "r") as file:
-                    line = file.readline()
-                count += 1
+                lines[i] = str(self.score) + "\n"
+                with open("highscores.txt","w") as file:
+                    for line in lines:
+                        file.write(line)
+                break
 
-        # for i in range(8):
-        #     cint = int(content[i])
-        #     if cint < self.score:
-        #         content[i] = self.score
-        #         with open('highscores.txt','w',encoding='utf-8') as file:
-        #             file.writelines(str(content))
-        #         break
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
