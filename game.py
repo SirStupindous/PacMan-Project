@@ -32,7 +32,7 @@ class Game(object):
         self.fruit = None
         self.pause = Pause(True)
         self.level = 0
-        self.lives = 5
+        self.lives = 1
         self.score = 0
         self.textgroup = TextGroup()
         self.lifesprites = LifeSprites(self.lives)
@@ -66,6 +66,7 @@ class Game(object):
     # A basic starter main menu page
     def menu(self):
         pg.display.set_caption("Menu")
+        self.screen.fill("black")
 
         while self.menu_running:
             # get mouse position
@@ -360,7 +361,7 @@ class Game(object):
                         self.ghosts.hide()
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
-                            self.update_highscore()
+                            #self.update_highscore()
                             self.pause.setPause(pauseTime=3, func=self.restart)
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
@@ -439,21 +440,6 @@ class Game(object):
         self.textgroup.updateScore(self.score)
 
     def update_highscore(self):
-         #function for updating high scores kinda works but it crashes the game a lot
-        file = open('highscores.txt','r') 
-        filedata = file.read()
-
-        for filedata in file:
-            if int(filedata) > self.score:
-                filedata = filedata.replace(int(filedata),self.score)
-
-                with open('highscores.txt','w') as file1:
-                    file1.write(filedata)
-                break
-        file.close()
-
-        
-        # function for updating high scores kinda works but it crashes the game a lot
         with open("highscores.txt") as file:
             line = file.readline()
             count = 0
@@ -464,11 +450,11 @@ class Game(object):
                 data[count] = str(self.score)
                 with open("highscores.txt", "w") as file:
                     file.writelines(data)
-                pass
+                break
             else:
                 with open("highscores.txt", "r") as file:
                     line = file.readline()
-                count += 1
+            count += 1
 
 
     def render(self):
